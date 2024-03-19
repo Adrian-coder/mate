@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculator Ideale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #calculatorForm {
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            margin: 5px 0;
+            padding: 10px;
+            width: calc(100% - 24px);
+            box-sizing: border-box;
+            font-size: 25px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #rezultate {
+            background-color: #f4f4f4;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 25px;
+        }
+        #detalii1, 
+        #detalii2 {
+    display: none;
+    color: #555; 
+    font-style: italic; 
+    font-size: 0.9em; 
+    margin-top: 10px; 
+    padding: 10px; 
+    border-top: 1px solid #ccc; 
+    background-color: #f8f8f8; 
+    box-shadow: inset 0 0 10px #ccc; 
+    border-radius: 5px; 
+}
+
+    </style>
+</head>
+<body>
+	<h1>Bine ați venit,Chiar nu ai rușine? </h1>
+    <form id="calculatorForm">
+        <input type="number" id="numar1" placeholder="Introdu numărul 1" value="1734">
+        <input type="number" id="numar2" placeholder="Introdu numărul 2" value="2324">
+        <button type="button" onclick="calculeaza()">Calculează</button>
+       <button type="button" onclick="descompunerePrime('numar1', 'detalii1')">Descompunere Numărul 1</button>
+       <button type="button" onclick="descompunerePrime('numar2', 'detalii2')">Descompunere Numărul 2</button>
+
+    <div id="detalii" style="display: none;">
+    <p>Aici puteți adăuga informațiile detaliate pe care doriți să le arătați.</p>
+</div>
+    </form>
+    <div id="detalii1" style="display: none;"></div>
+<div id="detalii2" style="display: none;"></div>
+    <div id="rezultate"></div>
+
+    <script>
+        function gcd(a, b) {
+            if (!b) {
+                return a;
+            }
+            return gcd(b, a % b);
+        }
+
+        function lcm(a, b) {
+            return (a / gcd(a, b)) * b;
+        }
+
+   function descompunerePrime(idNumar, idDetalii) {
+    let numar = parseInt(document.getElementById(idNumar).value, 10);
+    let rezultat = numar + " = ";
+    let divizor = 2;
+
+    while (numar > 1) {
+        let putere = 0;
+        while (numar % divizor === 0) {
+            putere++;
+            numar /= divizor;
+        }
+        if (putere > 0) {
+            rezultat += divizor === 2 ? `${divizor}^${putere}` : ` * ${divizor}^${putere}`;
+        }
+        divizor++;
+    }
+
+    document.getElementById(idDetalii).innerHTML = rezultat;
+    document.getElementById(idDetalii).style.display = 'block';
+}     function radical(numar) {
+    let factori = new Set();
+    for (let div = 2; div * div <= numar; div++) {
+        while (numar % div === 0) {
+            factori.add(div);
+            numar /= div;
+        }
+    }
+    if (numar > 1) factori.add(numar);
+
+    let radical = 1;
+    for (let factor of factori) {
+        radical *= factor;
+    }
+    return radical;
+}
+
+        function calculeaza() {
+            const numar1 = parseInt(document.getElementById('numar1').value, 10);
+            const numar2 = parseInt(document.getElementById('numar2').value, 10);
+
+            const cmmdc = gcd(numar1, numar2);
+            const suma = cmmdc;
+            const produs = numar1 * numar2;
+            const cmmmc = lcm(numar1, numar2);
+            const citulnr1 = numar1 / cmmdc;
+            const citulnr2 = numar2 / cmmdc;
+            const radicalCmmdc = radical(numar1);
+            const radicalCmmdc1 = radical(numar2);
+
+            let rezultateHTML = `Cel mai mare divizor comun (CMMDC): ${cmmdc}<br>`;
+            rezultateHTML += `Suma: ${suma}<br>`; 
+            rezultateHTML += `Produsul: ${produs}<br>`;
+            rezultateHTML += `Cel mai mic multiplu comun (CMMMC): ${cmmmc}<br>`;
+            rezultateHTML += `Câtul pentru primul număr: ${citulnr1}<br>`;
+            rezultateHTML += `Câtul pentru al doilea număr: ${citulnr2}<br>`;
+ 			rezultateHTML += `Radicalul Numarului (${numar1}): ${radicalCmmdc}<br>`;
+ 			rezultateHTML += `Radicalul Numarului (${numar2}): ${radicalCmmdc1}<br>`;
+            document.getElementById('rezultate').innerHTML = rezultateHTML;
+        }
+    </script>
+
+</body>
+</html>
