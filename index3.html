@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metoda lui Cramer Modificată pentru 2x2</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        td {
+            padding: 10px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 25px;
+        }
+        button {
+            background-color: #5c95ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3a73cc;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e2e2e2;
+            border-radius: 5px;
+        }
+
+
+
+ a {
+    display: inline-block; 
+    margin: 10px; 
+    color: #5c95ff; 
+    text-decoration: none;
+    padding: 8px 12px; 
+    border: 2px solid #5c95ff; 
+    border-radius: 5px; 
+    transition: background-color 0.3s, color 0.3s; 
+    font-size: 14px; 
+    font-weight: bold; 
+}
+a:hover {
+    background-color: #5c95ff;
+    color: white; 
+}
+
+    </style>
+
+
+
+    <h1>Metoda lui Cramer Modificată pentru 2x2</h1>
+    <form id="matrixForm">
+        <p>Introduceți coeficienții și termenii liberi ai sistemului, și Z pentru calculul modulului:</p>
+        <table>
+            <tr>
+                <td><input type="number" id="a11" /></td>
+                <td><input type="number" id="a12" /></td>
+                <td><input type="number" id="b1" /></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="a21" /></td>
+                <td><input type="number" id="a22" /></td>
+                <td><input type="number" id="b2" /></td>
+            </tr>
+            <tr>
+                <td colspan="3">Z: <input type="number" id="modValue" /></td>
+            </tr>
+        </table>
+        <button type="button" onclick="calculateCramer()">Calculați</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function calculateDeterminant(matrix, mod) {
+            let determinant = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+            if (mod) {
+                determinant = ((determinant % mod) + mod) % mod;
+            }
+            return determinant;
+        }
+
+        function replaceColumn(matrix, column, b) {
+            let newMatrix = matrix.map(row => [...row]);
+            newMatrix[0][column] = b[0];
+            newMatrix[1][column] = b[1];
+            return newMatrix;
+        }
+
+        function modInverse(a, mod) {
+            a = a % mod;
+            for (let x = 1; x < mod; x++) {
+                if ((a * x) % mod === 1) {
+                    return x;
+                }
+            }
+            return 1; 
+        }
+
+        function calculateCramer() {
+            const matrix = [
+                [parseFloat(document.getElementById('a11').value), parseFloat(document.getElementById('a12').value)],
+                [parseFloat(document.getElementById('a21').value), parseFloat(document.getElementById('a22').value)]
+            ];
+            const b = [
+                parseFloat(document.getElementById('b1').value),
+                parseFloat(document.getElementById('b2').value)
+            ];
+            const mod = parseInt(document.getElementById('modValue').value);
+
+            const delta = calculateDeterminant(matrix, mod);
+            if (delta === 0) {
+                document.getElementById('result').innerText = 'Sistemul nu are soluție unică.';
+                return;
+            }
+            const deltaInverse = modInverse(delta, mod);
+                        let resultsHtml = `Delta = ${delta}, Delta^-1 = ${deltaInverse}<br/>`;
+
+            for (let i = 0; i < 2; i++) {
+                const modifiedMatrix = replaceColumn(matrix, i, b);
+                const deltaI = calculateDeterminant(modifiedMatrix, mod);
+                const solution = (deltaI * deltaInverse) % mod;
+
+                resultsHtml += `Delta${i + 1} = ${deltaI}, x${i + 1} = ${solution}<br/>`;
+            }
+
+            document.getElementById('result').innerHTML = resultsHtml;
+        }
+    </script>
+
+        <a href="index.html">Înapoi la ideale</a> 
+    <a href="index2.html">Pentru matrice 3x3</a> <br>
+
+</body>
+</html>
+

@@ -55,6 +55,28 @@
     border-radius: 5px; 
 }
 
+
+
+
+a {
+    display: inline-block; 
+    margin: 10px; 
+    color: #5c95ff; 
+    text-decoration: none;
+    padding: 8px 12px; 
+    border: 2px solid #5c95ff; 
+    border-radius: 5px; 
+    transition: background-color 0.3s, color 0.3s; 
+    font-size: 14px; 
+    font-weight: bold; 
+}
+a:hover {
+    background-color: #5c95ff;
+    color: white; 
+}
+
+
+
     </style>
 </head>
 <body>
@@ -86,10 +108,11 @@
             return (a / gcd(a, b)) * b;
         }
 
-   function descompunerePrime(idNumar, idDetalii) {
+function descompunerePrime(idNumar, idDetalii) {
     let numar = parseInt(document.getElementById(idNumar).value, 10);
-    let rezultat = numar + " = ";
+    let rezultat = "";
     let divizor = 2;
+    let produsParțial = numar; // Inițializăm produsul parțial cu numărul complet
 
     while (numar > 1) {
         let putere = 0;
@@ -98,14 +121,29 @@
             numar /= divizor;
         }
         if (putere > 0) {
-            rezultat += divizor === 2 ? `${divizor}^${putere}` : ` * ${divizor}^${putere}`;
+            // Adăugăm factorul și puterea acestuia la rezultat
+            rezultat += (rezultat === "" ? "" : " * ") + divizor + "^" + putere;
+            // Verificăm dacă mai avem alți factori și adăugăm produsul parțial
+            if (numar > 1) {
+                rezultat += "(" + numar + ")";
+            }
         }
         divizor++;
+    }
+    
+    if (rezultat === "") {
+        rezultat = produsParțial + " este număr prim.";
+    } else {
+        rezultat = produsParțial + " = " + rezultat; 
     }
 
     document.getElementById(idDetalii).innerHTML = rezultat;
     document.getElementById(idDetalii).style.display = 'block';
-}     function radical(numar) {
+}
+
+
+
+function radical(numar) {
     let factori = new Set();
     for (let div = 2; div * div <= numar; div++) {
         while (numar % div === 0) {
@@ -144,8 +182,10 @@
  			rezultateHTML += `Radicalul Numarului (${numar1}): ${radicalCmmdc}<br>`;
  			rezultateHTML += `Radicalul Numarului (${numar2}): ${radicalCmmdc1}<br>`;
             document.getElementById('rezultate').innerHTML = rezultateHTML;
+
         }
     </script>
-
+<a href="index2.html">Metoda lui Crammer 3x3 </a>
+<a href="index3.html">Crammer 2x2 </a>
 </body>
 </html>
